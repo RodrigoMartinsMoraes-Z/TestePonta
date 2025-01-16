@@ -14,7 +14,7 @@ Para o desenvolvimento do projeto, foi utilizada a metodologia TDD (Test-Driven 
 
 1. Clone o repositório:
     ```
-    git clone https://github.com/seu-usuario/seu-repositorio.git
+    git clone https://github.com/RodrigoMartinsMoraes-Z/TestePonta
     ```
 
 2. Navegue até o diretório do projeto:
