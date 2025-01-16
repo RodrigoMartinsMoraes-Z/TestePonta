@@ -1,0 +1,6 @@
+@Ponta.Api.Usuario_HostAddress = http://localhost:5032
+
+GET {{Ponta.Api.Usuario_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

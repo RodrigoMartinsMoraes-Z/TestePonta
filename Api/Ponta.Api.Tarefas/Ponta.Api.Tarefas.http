@@ -1,0 +1,6 @@
+@Ponta.Api.Tarefas_HostAddress = http://localhost:5228
+
+GET {{Ponta.Api.Tarefas_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
