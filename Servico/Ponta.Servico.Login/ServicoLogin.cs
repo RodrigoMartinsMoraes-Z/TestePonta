@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Ponta.Servico.Login;
 public class ServicoLogin(IRepositorioUsuario repositorio)
+: IServicoLogin
 {
     public async Task<HttpResponseMessage> LoginAsync(string login, string senha)
     {
