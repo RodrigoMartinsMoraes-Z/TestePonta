@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Ponta.Contexto.Usuario.Repositorio;
 public class RepositorioUsuario(IContextoUsuario contexto)
+: IRepositorioUsuario
 {
     public async Task<int> SalvarUsuarioAsync(Usuario.Entidades.Usuario usuario, CancellationToken cancellationToken = default)
     {

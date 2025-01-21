@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Contexto\Ponta.Contexto.Usuario\Ponta.Contexto.Usuario.csproj" />
+    <ProjectReference Include="..\..\Servico\Ponta.Servico.Login\Ponta.Servico.Login.csproj" />
   </ItemGroup>
 
   <ItemGroup>
