@@ -57,24 +57,41 @@ namespace Ponta.Teste.Tarefa.Repositorio
         public async Task AtualizarTarefaAsync_DeveAtualizarTarefa()
         {
             // Arrange
-            var tarefa = new Contexto.Tarefa.Entidades.Tarefa
+            var tarefaOriginal = new Contexto.Tarefa.Entidades.Tarefa
             {
-                DataCriacao = DateTime.Today,
-                DataInicio = DateTime.Today,
-                Titulo = "titulo de teste",
-                Descricao = "descricao de teste",
+                DataCriacao = DateTime.Today.AddDays(-1),
+                DataInicio = DateTime.Today.AddDays(-1),
+                Titulo = "titulo original",
+                Descricao = "descricao original",
                 Status = StatusTarefa.Pendente,
                 Prioridade = Prioridade.Baixa,
             };
-            _mockContexto.Setup(c => c.Tarefas.Update(tarefa));
+
+            var tarefas = new List<Contexto.Tarefa.Entidades.Tarefa> { tarefaOriginal }.AsQueryable().BuildMockDbSet();
+            _mockContexto.Setup(c => c.Tarefas).Returns(tarefas.Object);
+
+            // Modifica a tarefa
+            tarefaOriginal.Titulo = "titulo atualizado";
+            tarefaOriginal.Descricao = "descricao atualizada";
+            tarefaOriginal.Status = StatusTarefa.Concluida;
+            tarefaOriginal.Prioridade = Prioridade.Alta;
+
+            _mockContexto.Setup(c => c.Tarefas.Update(tarefaOriginal));
             _mockContexto.Setup(c => c.SaveChangesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
             // Act
-            var result = await _repositorio.AtualizarTarefaAsync(tarefa);
+            var result = await _repositorio.AtualizarTarefaAsync(tarefaOriginal);
+
             // Assert
-            _mockContexto.Verify(c => c.Tarefas.Update(tarefa), Times.Once);
+            _mockContexto.Verify(c => c.Tarefas.Update(tarefaOriginal), Times.Once);
             _mockContexto.Verify(c => c.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
             Assert.Equal(1, result);
+            Assert.Equal("titulo atualizado", tarefaOriginal.Titulo);
+            Assert.Equal("descricao atualizada", tarefaOriginal.Descricao);
+            Assert.Equal(StatusTarefa.Concluida, tarefaOriginal.Status);
+            Assert.Equal(Prioridade.Alta, tarefaOriginal.Prioridade);
         }
+
 
         [Fact]
         public async Task ExcluirTarefaAsync_DeveExcluirTarefa()
