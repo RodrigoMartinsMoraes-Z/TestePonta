@@ -19,7 +19,7 @@ Para o desenvolvimento do projeto, foi utilizada a metodologia TDD (Test-Driven 
 
 2. Navegue até o diretório do projeto:
     ```
-    cd seu-repositorio
+    cd TestePonta
     ```
 
 3. Restaure as dependências:
