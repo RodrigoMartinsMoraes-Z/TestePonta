@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Contexto\Ponta.Contexto.Tarefa\Ponta.Contexto.Tarefa.csproj" />
+    <ProjectReference Include="..\..\Servico\Ponta.Servico.Tarefas\Ponta.Servico.Tarefas.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,7 @@ using System.Net;
 namespace Ponta.Servico.Tarefa;
 
 public class ServicoTarefa(IRepositorioTarefa repositorio)
+: IServicoTarefa
 {
     public async Task<HttpResponseMessage> NovaTarefa(Contexto.Tarefa.Entidades.Tarefa tarefa, Guid guidUsuarioLogado)
     {
