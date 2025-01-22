@@ -1,8 +1,17 @@
+using Ponta.Contexto.Usuario.Contexto;
+using Ponta.Contexto.Usuario.Interfaces;
+using Ponta.Contexto.Usuario.Repositorio;
+using Ponta.Servico.Usuario;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddScoped<IServicoUsuario, ServicoUsuario>();
+builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
+builder.Services.AddScoped<IContextoUsuario, ContextoUsuario>();
 
 var app = builder.Build();
 
@@ -14,28 +23,34 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/{guid}", async (IServicoUsuario servico, Guid guid) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    return await servico.ObterUsuarioPorGuidAsync(guid);
 })
-.WithName("GetWeatherForecast");
+.WithName("BuscarUsuario");
 
-app.Run();
+app.MapPost(
+string.Empty,
+    async (IServicoUsuario servico, Ponta.Contexto.Usuario.Entidades.Usuario usuario) =>
+    {
+        return await servico.SalvarUsuarioAsync(usuario);
+    })
+    .WithName("NovoUsuario");
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+app.MapPut(
+string.Empty,
+    async (IServicoUsuario servico, Ponta.Contexto.Usuario.Entidades.Usuario usuario) =>
+    {
+        return await servico.AtualizarUsuarioAsync(usuario);
+    })
+    .WithName("AtualizarUsuario");
+
+app.MapDelete("/{guid}", async (IServicoUsuario servico, Guid guid) =>
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    return await servico.ExcluirUsuarioAsync(guid);
+})
+.WithName("BuscarUsuario");
+
+await app.RunAsync();
+
