@@ -4,6 +4,7 @@ using MockQueryable.Moq;
 
 using Moq;
 
+using Ponta.Contexto.Tarefa.Enums;
 using Ponta.Contexto.Tarefa.Interfaces;
 using Ponta.Contexto.Tarefa.Repositorio;
 

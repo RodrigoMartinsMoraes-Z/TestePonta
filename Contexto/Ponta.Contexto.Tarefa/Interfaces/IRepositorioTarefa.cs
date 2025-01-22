@@ -1,4 +1,6 @@
-﻿namespace Ponta.Contexto.Tarefa.Interfaces;
+﻿using Ponta.Contexto.Tarefa.Enums;
+
+namespace Ponta.Contexto.Tarefa.Interfaces;
 public interface IRepositorioTarefa
 {
     Task<int> AtualizarTarefaAsync(Entidades.Tarefa tarefa, CancellationToken cancellationToken = default);

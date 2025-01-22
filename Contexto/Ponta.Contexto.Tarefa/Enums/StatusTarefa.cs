@@ -1,4 +1,6 @@
-﻿public enum StatusTarefa
+﻿namespace Ponta.Contexto.Tarefa.Enums;
+
+public enum StatusTarefa
 {
     Pendente = 0,
     EmAndamento = 1,

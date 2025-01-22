@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Contexto\Ponta.Contexto.Tarefa\Ponta.Contexto.Tarefa.csproj" />
+    <ProjectReference Include="..\..\Servico\Ponta.Servico.Tarefa\Ponta.Servico.Tarefa.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using Ponta.Contexto.Tarefa.Enums;
 using Ponta.Contexto.Tarefa.Interfaces;
 
 namespace Ponta.Contexto.Tarefa.Repositorio;

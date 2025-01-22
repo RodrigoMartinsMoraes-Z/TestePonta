@@ -1,4 +1,6 @@
-﻿namespace Ponta.Contexto.Tarefa.Entidades;
+﻿using Ponta.Contexto.Tarefa.Enums;
+
+namespace Ponta.Contexto.Tarefa.Entidades;
 public class Tarefa
 {
     DateTime dataCriacao;
