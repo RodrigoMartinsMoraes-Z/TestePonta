@@ -6,23 +6,25 @@ using Ponta.Servico.Usuario;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IServicoUsuario, ServicoUsuario>();
 builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
 builder.Services.AddScoped<IContextoUsuario, ContextoUsuario>();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
-
 
 app.MapGet("/{guid}", async (IServicoUsuario servico, Guid guid) =>
 {
@@ -50,7 +52,7 @@ app.MapDelete("/{guid}", async (IServicoUsuario servico, Guid guid) =>
 {
     return await servico.ExcluirUsuarioAsync(guid);
 })
-.WithName("BuscarUsuario");
+.WithName("DeletarUsuario");
 
 await app.RunAsync();
 

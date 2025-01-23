@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Builder;
+
 using Ponta.Contexto.Usuario.Contexto;
 using Ponta.Contexto.Usuario.Interfaces;
 using Ponta.Contexto.Usuario.Repositorio;
@@ -13,16 +15,24 @@ builder.Services.AddScoped<IServicoLogin, ServicoLogin>();
 builder.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
 builder.Services.AddScoped<IContextoUsuario, ContextoUsuario>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Meu API V1");
+        c.RoutePrefix = string.Empty;
+    });
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
-
 
 app.MapPost("/{login}/{senha}", async (IServicoLogin servico, string login, string senha) =>
 {

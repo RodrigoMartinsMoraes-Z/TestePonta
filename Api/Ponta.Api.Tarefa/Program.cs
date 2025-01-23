@@ -1,41 +1,49 @@
+using Ponta.Contexto.Tarefa.Contexto;
+using Ponta.Contexto.Tarefa.Entidades;
+using Ponta.Contexto.Tarefa.Interfaces;
+using Ponta.Contexto.Tarefa.Repositorio;
+using Ponta.Servico.Tarefa;
+
+using Tarefa = Ponta.Contexto.Tarefa.Entidades.Tarefa;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddScoped<IServicoTarefa, ServicoTarefa>();
+builder.Services.AddScoped<IRepositorioTarefa, RepositorioTarefa>();
+builder.Services.AddScoped<IContextoTarefa, ContextoTarefa>();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapPost("/", async (IServicoTarefa servico, Tarefa tarefa) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    return await servico.NovaTarefa(tarefa, tarefa.GuidUsuario);
 })
-.WithName("GetWeatherForecast");
+.WithName("BuscarTarefa");
 
-app.Run();
+app.MapPut(
+    "/",
+    async (IServicoTarefa servico, Tarefa tarefa) =>
+    {
+        return await servico.AtualizarTarefa(tarefa, tarefa.GuidUsuario);
+    })
+    .WithName("AtualizarTarefa");
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+await app.RunAsync();
+

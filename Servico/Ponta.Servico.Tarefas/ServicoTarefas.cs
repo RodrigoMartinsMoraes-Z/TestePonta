@@ -7,6 +7,7 @@ using System.Text.Json;
 namespace Ponta.Servico.Tarefas;
 
 public class ServicoTarefas(IRepositorioTarefa repositorio)
+: IServicoTarefas
 {
     public async Task<HttpResponseMessage> BuscarTarefas()
     {
