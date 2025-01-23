@@ -3,43 +3,40 @@
 using Ponta.Contexto.Tarefa.Enums;
 using Ponta.Contexto.Tarefa.Interfaces;
 
-using System.Text.Json;
+namespace Ponta.Servico.Tarefas;
 
-namespace Ponta.Servico.Tarefas
+public class ServicoTarefas : IServicoTarefas
 {
-    public class ServicoTarefas : IServicoTarefas
+    private readonly IRepositorioTarefa repositorio;
+
+    public ServicoTarefas(IRepositorioTarefa repositorio)
     {
-        private readonly IRepositorioTarefa repositorio;
+        this.repositorio = repositorio;
+    }
 
-        public ServicoTarefas(IRepositorioTarefa repositorio)
+    public async Task<IActionResult> BuscarTarefas()
+    {
+        try
         {
-            this.repositorio = repositorio;
+            var tarefas = await repositorio.ObterTarefasAsync();
+            return new OkObjectResult(tarefas);
         }
-
-        public async Task<IActionResult> BuscarTarefas()
+        catch (Exception ex)
         {
-            try
-            {
-                var tarefas = await repositorio.ObterTarefasAsync();
-                return new OkObjectResult(tarefas);
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestObjectResult(ex.Message);
-            }
+            return new BadRequestObjectResult(ex.Message);
         }
+    }
 
-        public async Task<IActionResult> BuscarTarefas(StatusTarefa status)
+    public async Task<IActionResult> BuscarTarefas(StatusTarefa status)
+    {
+        try
         {
-            try
-            {
-                var tarefas = await repositorio.ObterTarefasPorStatusAsync(status);
-                return new OkObjectResult(tarefas);
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestObjectResult(ex.Message);
-            }
+            var tarefas = await repositorio.ObterTarefasPorStatusAsync(status);
+            return new OkObjectResult(tarefas);
+        }
+        catch (Exception ex)
+        {
+            return new BadRequestObjectResult(ex.Message);
         }
     }
 }

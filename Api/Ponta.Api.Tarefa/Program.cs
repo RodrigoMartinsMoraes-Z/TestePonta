@@ -9,7 +9,6 @@ using Ponta.Contexto.Tarefa.Repositorio;
 using Ponta.Servico.Tarefa;
 
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 using Tarefa = Ponta.Contexto.Tarefa.Entidades.Tarefa;
@@ -107,12 +106,7 @@ app.MapPost("/",
 
         Guid guidUsuarioLogado = ObterUsuario(token);
 
-        if (guidUsuarioLogado == Guid.Empty)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.Ok(await servico.NovaTarefa(tarefa, guidUsuarioLogado));
+        return guidUsuarioLogado == Guid.Empty ? Results.Unauthorized() : Results.Ok(await servico.NovaTarefa(tarefa, guidUsuarioLogado));
     })
     .WithName("NovaTarefa");
 
@@ -136,12 +130,9 @@ app.MapPut("/",
 
         Guid guidUsuarioLogado = ObterUsuario(token);
 
-        if (guidUsuarioLogado == Guid.Empty)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.Ok(await servico.AtualizarTarefa(tarefa, guidUsuarioLogado));
+        return guidUsuarioLogado == Guid.Empty
+            ? Results.Unauthorized()
+            : Results.Ok(await servico.AtualizarTarefa(tarefa, guidUsuarioLogado));
     })
     .WithName("AtualizarTarefa");
 

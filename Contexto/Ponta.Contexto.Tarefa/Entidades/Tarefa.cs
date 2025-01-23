@@ -3,7 +3,7 @@
 namespace Ponta.Contexto.Tarefa.Entidades;
 public class Tarefa
 {
-    DateTime dataCriacao;
+    private DateTime dataCriacao;
     private DateTime dataInicio;
     private DateTime dataFim;
 
@@ -11,9 +11,9 @@ public class Tarefa
 
     public Guid Guid { get; set; }
 
-    public string Titulo { get; set; }
+    public required string Titulo { get; set; }
 
-    public string Descricao { get; set; }
+    public required string Descricao { get; set; }
 
     public DateTime DataCriacao
     {
@@ -38,5 +38,4 @@ public class Tarefa
     public Prioridade Prioridade { get; set; }
 
     public Guid GuidUsuario { get; set; }
-
 }

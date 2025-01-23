@@ -10,7 +10,6 @@ using Ponta.Contexto.Tarefa.Repositorio;
 using Ponta.Servico.Tarefas;
 
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -107,12 +106,7 @@ app.MapGet("/",
 
         Guid guidUsuarioLogado = ObterUsuario(token);
 
-        if (guidUsuarioLogado == Guid.Empty)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.Ok(await servico.BuscarTarefas());
+        return guidUsuarioLogado == Guid.Empty ? Results.Unauthorized() : Results.Ok(await servico.BuscarTarefas());
     })
     .WithName("BuscarTarefas");
 
@@ -136,12 +130,7 @@ app.MapGet("/{status}",
 
         Guid guidUsuarioLogado = ObterUsuario(token);
 
-        if (guidUsuarioLogado == Guid.Empty)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.Ok(await servico.BuscarTarefas(status));
+        return guidUsuarioLogado == Guid.Empty ? Results.Unauthorized() : Results.Ok(await servico.BuscarTarefas(status));
     })
     .WithName("BuscarTarefasPorStatus");
 

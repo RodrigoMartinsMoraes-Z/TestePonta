@@ -2,18 +2,11 @@
 
 using Moq;
 
-using Newtonsoft.Json;
-
 using Ponta.Contexto.Usuario.Interfaces;
 using Ponta.Servico.Usuario;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Ponta.Teste.Usuario.Servico;
 public class TesteServicoUsuario
@@ -246,5 +239,4 @@ public class TesteServicoUsuario
         }
         return builder.ToString();
     }
-
 }

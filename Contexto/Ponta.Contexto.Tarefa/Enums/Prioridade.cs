@@ -1,10 +1,9 @@
-﻿namespace Ponta.Contexto.Tarefa.Enums
+﻿namespace Ponta.Contexto.Tarefa.Enums;
+
+public enum Prioridade
 {
-    public enum Prioridade
-    {
-        Baixa = 0,
-        Normal = 1,
-        Alta = 2,
-        Urgente = 3
-    }
+    Baixa = 0,
+    Normal = 1,
+    Alta = 2,
+    Urgente = 3
 }

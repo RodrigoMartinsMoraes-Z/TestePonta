@@ -4,15 +4,15 @@ using System.Text;
 namespace Ponta.Contexto.Usuario.Entidades;
 public class Usuario
 {
-    private string senha;
+    private string? senha;
 
     public int Id { get; set; }
 
     public Guid Guid { get; set; }
 
-    public string Nome { get; set; }
+    public string? Nome { get; set; }
 
-    public string Login { get; set; }
+    public string? Login { get; set; }
 
     public string Senha
     {

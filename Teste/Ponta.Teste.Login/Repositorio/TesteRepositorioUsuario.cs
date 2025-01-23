@@ -1,19 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-using MockQueryable.Moq;
+﻿using MockQueryable.Moq;
 
 using Moq;
 
 using Ponta.Contexto.Usuario.Interfaces;
 using Ponta.Contexto.Usuario.Repositorio;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ponta.Teste.Usuario.Repositorio;
+namespace Ponta.Teste.Login.Repositorio;
 public class TesteRepositorioUsuario
 {
     private readonly Mock<IContextoUsuario> _mockContexto;

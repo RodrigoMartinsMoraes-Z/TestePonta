@@ -9,7 +9,6 @@ using Ponta.Contexto.Usuario.Repositorio;
 using Ponta.Servico.Usuario;
 
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -106,12 +105,7 @@ app.MapGet("/{guid}",
 
         Guid guidUsuarioLogado = ObterUsuario(token);
 
-        if (guidUsuarioLogado == Guid.Empty)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.Ok(await servico.ObterUsuarioPorGuidAsync(guid));
+        return guidUsuarioLogado == Guid.Empty ? Results.Unauthorized() : Results.Ok(await servico.ObterUsuarioPorGuidAsync(guid));
     })
     .WithName("BuscarUsuario");
 
@@ -143,12 +137,7 @@ app.MapPut("/",
 
         Guid guidUsuarioLogado = ObterUsuario(token);
 
-        if (guidUsuarioLogado == Guid.Empty)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.Ok(await servico.AtualizarUsuarioAsync(usuario));
+        return guidUsuarioLogado == Guid.Empty ? Results.Unauthorized() : Results.Ok(await servico.AtualizarUsuarioAsync(usuario));
     })
     .WithName("AtualizarUsuario");
 
@@ -172,12 +161,7 @@ app.MapDelete("/{guid}",
 
         Guid guidUsuarioLogado = ObterUsuario(token);
 
-        if (guidUsuarioLogado == Guid.Empty)
-        {
-            return Results.Unauthorized();
-        }
-
-        return Results.Ok(await servico.ExcluirUsuarioAsync(guid));
+        return guidUsuarioLogado == Guid.Empty ? Results.Unauthorized() : Results.Ok(await servico.ExcluirUsuarioAsync(guid));
     })
     .WithName("DeletarUsuario");
 

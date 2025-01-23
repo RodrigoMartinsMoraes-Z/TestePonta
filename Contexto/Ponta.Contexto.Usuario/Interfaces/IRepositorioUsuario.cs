@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Ponta.Contexto.Usuario.Interfaces;
+﻿namespace Ponta.Contexto.Usuario.Interfaces;
 public interface IRepositorioUsuario
 {
     Task<int> AtualizarUsuarioAsync(Entidades.Usuario usuario, CancellationToken cancellationToken = default);

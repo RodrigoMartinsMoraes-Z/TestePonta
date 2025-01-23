@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using System;
-using System.Linq;
-
 namespace Ponta.Servico.Usuario;
 public interface IServicoUsuario
 {

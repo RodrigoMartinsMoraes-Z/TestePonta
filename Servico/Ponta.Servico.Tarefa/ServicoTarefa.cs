@@ -2,77 +2,71 @@
 
 using Ponta.Contexto.Tarefa.Interfaces;
 
-namespace Ponta.Servico.Tarefa
+namespace Ponta.Servico.Tarefa;
+
+public class ServicoTarefa : IServicoTarefa
 {
-    public class ServicoTarefa : IServicoTarefa
+    private readonly IRepositorioTarefa repositorio;
+
+    public ServicoTarefa(IRepositorioTarefa repositorio)
     {
-        private readonly IRepositorioTarefa repositorio;
+        this.repositorio = repositorio;
+    }
 
-        public ServicoTarefa(IRepositorioTarefa repositorio)
+    public async Task<IActionResult> NovaTarefa(Contexto.Tarefa.Entidades.Tarefa tarefa, Guid guidUsuarioLogado)
+    {
+        try
         {
-            this.repositorio = repositorio;
-        }
-
-        public async Task<IActionResult> NovaTarefa(Contexto.Tarefa.Entidades.Tarefa tarefa, Guid guidUsuarioLogado)
-        {
-            try
-            {
-                if (await CamposInvalidos(tarefa))
-                {
-                    return new BadRequestObjectResult("Campos inválidos");
-                }
-
-                tarefa.GuidUsuario = guidUsuarioLogado;
-
-                await repositorio.SalvarTarefaAsync(tarefa);
-                return new OkObjectResult(tarefa);
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestObjectResult(ex.Message);
-            }
-        }
-
-        public async Task<IActionResult> AtualizarTarefa(Contexto.Tarefa.Entidades.Tarefa tarefa, Guid guidUsuarioLogado)
-        {
-            var tarefaExistente = await repositorio.ObterTarefaPorGuidAsync(tarefa.Guid);
-
-            if (tarefaExistente is null)
-            {
-                return new NotFoundResult();
-            }
-
-            if (tarefaExistente.GuidUsuario != guidUsuarioLogado)
-            {
-                return new UnauthorizedResult();
-            }
-
-            if (await CamposInvalidos(tarefa))
+            if (CamposInvalidos(tarefa))
             {
                 return new BadRequestObjectResult("Campos inválidos");
             }
 
-            tarefaExistente.Titulo = tarefa.Titulo;
-            tarefaExistente.Descricao = tarefa.Descricao;
-            tarefaExistente.DataFim = tarefa.DataFim;
-            tarefaExistente.DataInicio = tarefa.DataInicio;
-            tarefaExistente.Prioridade = tarefa.Prioridade;
-            tarefaExistente.Status = tarefa.Status;
+            tarefa.GuidUsuario = guidUsuarioLogado;
 
-            await repositorio.AtualizarTarefaAsync(tarefaExistente);
-
-            return new OkObjectResult(tarefaExistente);
+            await repositorio.SalvarTarefaAsync(tarefa);
+            return new OkObjectResult(tarefa);
         }
-
-        private async Task<bool> CamposInvalidos(Contexto.Tarefa.Entidades.Tarefa tarefa)
+        catch (Exception ex)
         {
-            if (string.IsNullOrWhiteSpace(tarefa.Descricao) ||
-                string.IsNullOrWhiteSpace(tarefa.Titulo))
-            {
-                return true;
-            }
-
-            return false;
+            return new BadRequestObjectResult(ex.Message);
         }
+    }
+
+    public async Task<IActionResult> AtualizarTarefa(Contexto.Tarefa.Entidades.Tarefa tarefa, Guid guidUsuarioLogado)
+    {
+        var tarefaExistente = await repositorio.ObterTarefaPorGuidAsync(tarefa.Guid);
+
+        if (tarefaExistente is null)
+        {
+            return new NotFoundResult();
+        }
+
+        if (tarefaExistente.GuidUsuario != guidUsuarioLogado)
+        {
+            return new UnauthorizedResult();
+        }
+
+        if (CamposInvalidos(tarefa))
+        {
+            return new BadRequestObjectResult("Campos inválidos");
+        }
+
+        tarefaExistente.Titulo = tarefa.Titulo;
+        tarefaExistente.Descricao = tarefa.Descricao;
+        tarefaExistente.DataFim = tarefa.DataFim;
+        tarefaExistente.DataInicio = tarefa.DataInicio;
+        tarefaExistente.Prioridade = tarefa.Prioridade;
+        tarefaExistente.Status = tarefa.Status;
+
+        await repositorio.AtualizarTarefaAsync(tarefaExistente);
+
+        return new OkObjectResult(tarefaExistente);
+    }
+
+    private bool CamposInvalidos(Contexto.Tarefa.Entidades.Tarefa tarefa)
+    {
+        return string.IsNullOrWhiteSpace(tarefa.Descricao) ||
+            string.IsNullOrWhiteSpace(tarefa.Titulo);
     }
 }
