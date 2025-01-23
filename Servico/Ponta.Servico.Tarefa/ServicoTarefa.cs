@@ -52,9 +52,16 @@ namespace Ponta.Servico.Tarefa
                 return new BadRequestObjectResult("Campos inválidos");
             }
 
-            await repositorio.AtualizarTarefaAsync(tarefa);
+            tarefaExistente.Titulo = tarefa.Titulo;
+            tarefaExistente.Descricao = tarefa.Descricao;
+            tarefaExistente.DataFim = tarefa.DataFim;
+            tarefaExistente.DataInicio = tarefa.DataInicio;
+            tarefaExistente.Prioridade = tarefa.Prioridade;
+            tarefaExistente.Status = tarefa.Status;
 
-            return new OkObjectResult(tarefa);
+            await repositorio.AtualizarTarefaAsync(tarefaExistente);
+
+            return new OkObjectResult(tarefaExistente);
         }
 
         private async Task<bool> CamposInvalidos(Contexto.Tarefa.Entidades.Tarefa tarefa)

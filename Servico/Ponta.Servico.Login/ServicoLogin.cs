@@ -51,7 +51,7 @@ public class ServicoLogin(IRepositorioUsuario repositorio)
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-            new Claim(ClaimTypes.NameIdentifier, usuario.Guid.ToString())
+            new Claim("nameid", usuario.Guid.ToString())
             }),
             Expires = DateTime.UtcNow.AddHours(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
