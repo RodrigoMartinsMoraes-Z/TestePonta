@@ -33,9 +33,16 @@ Para o desenvolvimento do projeto, foi utilizada a metodologia TDD (Test-Driven 
     ```
 
 5. Inicie a aplicação:
+5.1 Para cada API, navegue até o diretório do projeto e execute o comando:
     ```
     dotnet run
     ```
+
+URLs das APIs (swagger):
+- API de Login: https://localhost:7286/index.html
+- API de Usuários: https://localhost:7165/swagger/index.html
+- API de Tarefa: https://localhost:7073/swagger/index.html
+- API de Tarefas: https://localhost:7239/swagger/index.html
 
 ## Tecnologias Utilizadas
 
