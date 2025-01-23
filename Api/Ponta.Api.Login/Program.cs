@@ -1,11 +1,34 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.IdentityModel.Tokens;
 
 using Ponta.Contexto.Usuario.Contexto;
 using Ponta.Contexto.Usuario.Interfaces;
 using Ponta.Contexto.Usuario.Repositorio;
 using Ponta.Servico.Login;
 
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar JWT
+var key = Encoding.ASCII.GetBytes("chave-super-segura-e-bem-maior-para-teste-1234567890");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

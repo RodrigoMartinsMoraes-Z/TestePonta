@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using Moq;
 
 using Newtonsoft.Json;
 
@@ -40,11 +42,11 @@ public class TesteServicoUsuario
         _mockRepositorio.Setup(r => r.SalvarUsuarioAsync(usuario, CancellationToken.None)).Returns(Task.FromResult(1));
 
         // Act
-        var result = await _servicoUsuario.SalvarUsuarioAsync(usuario);
+        var result = await _servicoUsuario.SalvarUsuarioAsync(usuario) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(200, result.StatusCode);
     }
 
     [Fact]
@@ -61,11 +63,11 @@ public class TesteServicoUsuario
         _mockRepositorio.Setup(r => r.SalvarUsuarioAsync(usuario, CancellationToken.None)).Returns(Task.FromResult(1));
 
         // Act
-        var result = await _servicoUsuario.SalvarUsuarioAsync(usuario);
+        var result = await _servicoUsuario.SalvarUsuarioAsync(usuario) as BadRequestResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        Assert.Equal(400, result.StatusCode);
     }
 
     [Fact]
@@ -81,17 +83,14 @@ public class TesteServicoUsuario
             Nome = "nome_teste"
         };
 
-        var usuarioJson = JsonConvert.SerializeObject(usuario);
-
         _mockRepositorio.Setup(r => r.ObterUsuarioPorGuidAsync(guid, CancellationToken.None)).ReturnsAsync(usuario);
         // Act
-        var result = await _servicoUsuario.ObterUsuarioPorGuidAsync(guid);
+        var result = await _servicoUsuario.ObterUsuarioPorGuidAsync(guid) as OkObjectResult;
 
         // Assert
-        var jsonString = await result.Content.ReadAsStringAsync();
 
         Assert.NotNull(result);
-        Assert.Equal(usuarioJson, jsonString);
+        Assert.Equal(usuario, result.Value);
     }
 
     [Fact]
@@ -109,11 +108,11 @@ public class TesteServicoUsuario
 
         _mockRepositorio.Setup(r => r.ObterUsuarioPorGuidAsync(guid, CancellationToken.None)).ReturnsAsync(usuario);
         // Act
-        var result = await _servicoUsuario.ObterUsuarioPorGuidAsync(Guid.NewGuid());
+        var result = await _servicoUsuario.ObterUsuarioPorGuidAsync(Guid.NewGuid()) as NotFoundResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+        Assert.Equal(404, result.StatusCode);
     }
 
     [Fact]
@@ -132,11 +131,11 @@ public class TesteServicoUsuario
         _mockRepositorio.Setup(r => r.ExcluirUsuarioAsync(usuario, CancellationToken.None)).Returns(Task.FromResult(1));
 
         // Act
-        var result = await _servicoUsuario.ExcluirUsuarioAsync(guid);
+        var result = await _servicoUsuario.ExcluirUsuarioAsync(guid) as OkResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(200, result.StatusCode);
     }
 
     [Fact]
@@ -154,11 +153,11 @@ public class TesteServicoUsuario
         _mockRepositorio.Setup(r => r.ObterUsuarioPorGuidAsync(guid, CancellationToken.None)).ReturnsAsync((Contexto.Usuario.Entidades.Usuario)null);
 
         // Act
-        var result = await _servicoUsuario.ExcluirUsuarioAsync(guid);
+        var result = await _servicoUsuario.ExcluirUsuarioAsync(guid) as NotFoundResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+        Assert.Equal(404, result.StatusCode);
     }
 
     [Fact]
@@ -201,11 +200,11 @@ public class TesteServicoUsuario
         string senhaCriptografadaEsperada = GerarSenhaCriptografada("senha_atualizada");
 
         // Act
-        var result = await _servicoUsuario.AtualizarUsuarioAsync(usuarioAtualizado);
+        var result = await _servicoUsuario.AtualizarUsuarioAsync(usuarioAtualizado) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(200, result.StatusCode);
         Assert.Equal("login_atualizado", usuarioOriginal.Login);
         Assert.Equal("nome_atualizado", usuarioOriginal.Nome);
         Assert.Equal(senhaCriptografadaEsperada, usuarioOriginal.Senha); // Comparar a senha criptografada
@@ -227,11 +226,11 @@ public class TesteServicoUsuario
         _mockRepositorio.Setup(r => r.ObterUsuarioPorGuidAsync(usuario.Guid, CancellationToken.None)).ReturnsAsync((Contexto.Usuario.Entidades.Usuario)null);
 
         // Act
-        var result = await _servicoUsuario.AtualizarUsuarioAsync(usuario);
+        var result = await _servicoUsuario.AtualizarUsuarioAsync(usuario) as NotFoundResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+        Assert.Equal(404, result.StatusCode);
     }
 
     private static string GerarSenhaCriptografada(string senha)
@@ -247,7 +246,5 @@ public class TesteServicoUsuario
         }
         return builder.ToString();
     }
-
-
 
 }

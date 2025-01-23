@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using Moq;
 
 using Ponta.Contexto.Tarefa.Interfaces;
 using Ponta.Servico.Tarefas;
@@ -29,7 +31,8 @@ public class TesteServicoTarefas
         // Arrange
         var tarefas = new List<Contexto.Tarefa.Entidades.Tarefa>
         {
-            new() {
+            new()
+            {
                 Guid = Guid.NewGuid(),
                 Titulo = "titulo_teste",
                 Descricao = "descricao_teste",
@@ -38,7 +41,8 @@ public class TesteServicoTarefas
                 GuidUsuario = Guid.NewGuid(),
                 Status = Contexto.Tarefa.Enums.StatusTarefa.Pendente
             },
-            new() {
+            new()
+            {
                 Guid = Guid.NewGuid(),
                 Titulo = "titulo_teste 2",
                 Descricao = "descricao_teste 2",
@@ -52,13 +56,14 @@ public class TesteServicoTarefas
         repositorio.Setup(r => r.ObterTarefasAsync(It.IsAny<CancellationToken>())).ReturnsAsync(tarefas);
 
         // Act
-        var result = await servicoTarefas.BuscarTarefas();
+        var result = await servicoTarefas.BuscarTarefas() as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
-        Assert.Equivalent(tarefas, JsonSerializer.Deserialize<List<Contexto.Tarefa.Entidades.Tarefa>>(await result.Content.ReadAsStringAsync()));
+        Assert.Equal(200, result.StatusCode);
+        Assert.Equivalent(tarefas, result.Value);
     }
+
 
     [Fact]
     public async Task BuscarTarefasPendentes_DeveRetornarTodasTarefasPendentes()
@@ -118,14 +123,14 @@ public class TesteServicoTarefas
             .ReturnsAsync(tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.Pendente));
 
         // Act
-        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.Pendente);
+        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.Pendente) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(200, result.StatusCode);
         Assert.Equivalent(
             tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.Pendente),
-            JsonSerializer.Deserialize<List<Contexto.Tarefa.Entidades.Tarefa>>(await result.Content.ReadAsStringAsync())
+            result.Value
             );
     }
     [Fact]
@@ -186,14 +191,14 @@ public class TesteServicoTarefas
             .ReturnsAsync(tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.EmAndamento));
 
         // Act
-        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.EmAndamento);
+        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.EmAndamento) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(200, result.StatusCode);
         Assert.Equivalent(
             tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.EmAndamento),
-            JsonSerializer.Deserialize<List<Contexto.Tarefa.Entidades.Tarefa>>(await result.Content.ReadAsStringAsync())
+            result.Value
             );
     }
     [Fact]
@@ -254,14 +259,14 @@ public class TesteServicoTarefas
             .ReturnsAsync(tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.Concluida));
 
         // Act
-        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.Concluida);
+        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.Concluida) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(200, result.StatusCode);
         Assert.Equivalent(
             tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.Concluida),
-            JsonSerializer.Deserialize<List<Contexto.Tarefa.Entidades.Tarefa>>(await result.Content.ReadAsStringAsync())
+            result.Value
             );
     }
 
@@ -323,14 +328,14 @@ public class TesteServicoTarefas
             .ReturnsAsync(tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.Cancelada));
 
         // Act
-        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.Cancelada);
+        var result = await servicoTarefas.BuscarTarefas(Contexto.Tarefa.Enums.StatusTarefa.Cancelada) as OkObjectResult;
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(200, result.StatusCode);
         Assert.Equivalent(
             tarefas.Where(t => t.Status == Contexto.Tarefa.Enums.StatusTarefa.Cancelada),
-            JsonSerializer.Deserialize<List<Contexto.Tarefa.Entidades.Tarefa>>(await result.Content.ReadAsStringAsync())
+            result.Value
             );
     }
 }

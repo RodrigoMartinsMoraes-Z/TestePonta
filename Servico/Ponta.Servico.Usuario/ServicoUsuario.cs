@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using Newtonsoft.Json;
 
 using Ponta.Contexto.Usuario.Interfaces;
 using Ponta.Contexto.Usuario.Repositorio;
@@ -6,109 +8,100 @@ using Ponta.Contexto.Usuario.Repositorio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ponta.Servico.Usuario;
-public class ServicoUsuario(IRepositorioUsuario repositorio) : IServicoUsuario
+namespace Ponta.Servico.Usuario
 {
-    public async Task<HttpResponseMessage> AtualizarUsuarioAsync(Contexto.Usuario.Entidades.Usuario usuario)
+    public class ServicoUsuario : IServicoUsuario
     {
-        try
+        private readonly IRepositorioUsuario repositorio;
+
+        public ServicoUsuario(IRepositorioUsuario repositorio)
         {
-            var usuarioExistente = await repositorio.ObterUsuarioPorGuidAsync(usuario.Guid);
-
-            if (usuarioExistente is null)
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
-
-            await repositorio.AtualizarUsuarioAsync(usuario);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
+            this.repositorio = repositorio;
         }
-        catch (Exception ex)
+
+        public async Task<IActionResult> AtualizarUsuarioAsync(Contexto.Usuario.Entidades.Usuario usuario)
         {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
+            try
             {
-                Content = new StringContent(ex.Message)
-            };
-        }
-    }
+                var usuarioExistente = await repositorio.ObterUsuarioPorGuidAsync(usuario.Guid);
 
-    public async Task<HttpResponseMessage> ExcluirUsuarioAsync(Guid guid)
-    {
-        try
-        {
-            var usuarioExistente = await repositorio.ObterUsuarioPorGuidAsync(guid);
+                if (usuarioExistente is null)
+                    return new NotFoundResult();
 
-            if (usuarioExistente is null)
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
+                await repositorio.AtualizarUsuarioAsync(usuario);
 
-            await repositorio.ExcluirUsuarioAsync(usuarioExistente);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
-        }
-        catch (Exception ex)
-        {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                return new OkObjectResult(usuario);
+            }
+            catch (Exception ex)
             {
-                Content = new StringContent(ex.Message)
-            };
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
-    }
 
-    public async Task<HttpResponseMessage> ObterUsuarioPorGuidAsync(Guid guid)
-    {
-        try
+        public async Task<IActionResult> ExcluirUsuarioAsync(Guid guid)
         {
-            var usuarioExistente = await repositorio.ObterUsuarioPorGuidAsync(guid);
-
-            if (usuarioExistente is null)
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
-
-            return new HttpResponseMessage(HttpStatusCode.OK)
+            try
             {
-                Content =
-                    new StringContent(JsonConvert.SerializeObject(usuarioExistente), Encoding.UTF8, "application/json")
-            };
-        }
-        catch (Exception ex)
-        {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                var usuarioExistente = await repositorio.ObterUsuarioPorGuidAsync(guid);
+
+                if (usuarioExistente is null)
+                    return new NotFoundResult();
+
+                await repositorio.ExcluirUsuarioAsync(usuarioExistente);
+
+                return new OkResult();
+            }
+            catch (Exception ex)
             {
-                Content = new StringContent(ex.Message)
-            };
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
-    }
 
-    public async Task<HttpResponseMessage> SalvarUsuarioAsync(Contexto.Usuario.Entidades.Usuario usuario)
-    {
-        try
+        public async Task<IActionResult> ObterUsuarioPorGuidAsync(Guid guid)
         {
-            if (await CamposInvalidos(usuario))
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
-
-            await repositorio.SalvarUsuarioAsync(usuario);
-
-            return new HttpResponseMessage(HttpStatusCode.OK);
-        }
-        catch (Exception ex)
-        {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
+            try
             {
-                Content = new StringContent(ex.Message)
-            };
+                var usuarioExistente = await repositorio.ObterUsuarioPorGuidAsync(guid);
+
+                if (usuarioExistente is null)
+                    return new NotFoundResult();
+
+                return new OkObjectResult(usuarioExistente);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
-    }
 
-    private async Task<bool> CamposInvalidos(Contexto.Usuario.Entidades.Usuario usuario)
-    {
-        if (string.IsNullOrWhiteSpace(usuario.Senha) ||
-            string.IsNullOrWhiteSpace(usuario.Nome) ||
-            string.IsNullOrWhiteSpace(usuario.Login))
-            return true;
+        public async Task<IActionResult> SalvarUsuarioAsync(Contexto.Usuario.Entidades.Usuario usuario)
+        {
+            try
+            {
+                if (await CamposInvalidos(usuario))
+                    return new BadRequestResult();
 
-        return false;
+                await repositorio.SalvarUsuarioAsync(usuario);
+
+                return new OkObjectResult(usuario);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+        }
+
+        private async Task<bool> CamposInvalidos(Contexto.Usuario.Entidades.Usuario usuario)
+        {
+            if (string.IsNullOrWhiteSpace(usuario.Senha) ||
+                string.IsNullOrWhiteSpace(usuario.Nome) ||
+                string.IsNullOrWhiteSpace(usuario.Login))
+                return true;
+
+            return false;
+        }
     }
 }

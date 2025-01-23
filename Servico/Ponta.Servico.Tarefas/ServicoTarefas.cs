@@ -1,50 +1,45 @@
-﻿using Ponta.Contexto.Tarefa.Enums;
+﻿using Microsoft.AspNetCore.Mvc;
+
+using Ponta.Contexto.Tarefa.Enums;
 using Ponta.Contexto.Tarefa.Interfaces;
 
-using System.Net;
 using System.Text.Json;
 
-namespace Ponta.Servico.Tarefas;
-
-public class ServicoTarefas(IRepositorioTarefa repositorio)
-: IServicoTarefas
+namespace Ponta.Servico.Tarefas
 {
-    public async Task<HttpResponseMessage> BuscarTarefas()
+    public class ServicoTarefas : IServicoTarefas
     {
-        try
+        private readonly IRepositorioTarefa repositorio;
+
+        public ServicoTarefas(IRepositorioTarefa repositorio)
         {
-            var tarefas = await repositorio.ObterTarefasAsync();
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonSerializer.Serialize(tarefas))
-            };
+            this.repositorio = repositorio;
         }
-        catch (Exception ex)
+
+        public async Task<IActionResult> BuscarTarefas()
         {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
+            try
             {
-                Content = new StringContent(ex.Message)
-            };
+                var tarefas = await repositorio.ObterTarefasAsync();
+                return new OkObjectResult(tarefas);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> BuscarTarefas(StatusTarefa status)
+        {
+            try
+            {
+                var tarefas = await repositorio.ObterTarefasPorStatusAsync(status);
+                return new OkObjectResult(tarefas);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
     }
-
-    public async Task<HttpResponseMessage> BuscarTarefas(StatusTarefa status)
-    {
-        try
-        {
-            var tarefas = await repositorio.ObterTarefasPorStatusAsync(status);
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(JsonSerializer.Serialize(tarefas))
-            };
-        }
-        catch (Exception ex)
-        {
-            return new HttpResponseMessage(HttpStatusCode.BadRequest)
-            {
-                Content = new StringContent(ex.Message)
-            };
-        }
-    }
-
 }
