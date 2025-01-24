@@ -3,6 +3,7 @@
 using Ponta.Contexto.Usuario.Interfaces;
 
 namespace Ponta.Contexto.Usuario.Contexto;
+
 public class ContextoUsuario : DbContext, IContextoUsuario
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

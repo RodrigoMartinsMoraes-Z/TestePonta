@@ -21,7 +21,6 @@ public class TesteRepositorioTarefa
         _repositorio = new RepositorioTarefa(_mockContexto.Object);
     }
 
-
     [Fact]
     public async Task ObterTarefasAsync_DeveRetornarTarefas()
     {

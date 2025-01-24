@@ -83,7 +83,6 @@ public class TesteRepositorioTarefa
         Assert.Equal(Prioridade.Alta, tarefaOriginal.Prioridade);
     }
 
-
     [Fact]
     public async Task ExcluirTarefaAsync_DeveExcluirTarefa()
     {

@@ -6,6 +6,7 @@ using Ponta.Contexto.Tarefa.Interfaces;
 using Ponta.Servico.Tarefas;
 
 namespace Ponta.Teste.Tarefas.Servico;
+
 public class TesteServicoTarefas
 {
     private readonly Mock<IRepositorioTarefa> repositorio;
@@ -55,7 +56,6 @@ public class TesteServicoTarefas
         Assert.Equal(200, result.StatusCode);
         Assert.Equivalent(tarefas, result.Value);
     }
-
 
     [Fact]
     public async Task BuscarTarefasPendentes_DeveRetornarTodasTarefasPendentes()
@@ -125,6 +125,7 @@ public class TesteServicoTarefas
             result.Value
             );
     }
+
     [Fact]
     public async Task BuscarTarefasEmAndamento_DeveRetornarTodasTarefasEmAndamento()
     {
@@ -193,6 +194,7 @@ public class TesteServicoTarefas
             result.Value
             );
     }
+
     [Fact]
     public async Task BuscarTarefasConcluidas_DeveRetornarTodasTarefasConcluidas()
     {

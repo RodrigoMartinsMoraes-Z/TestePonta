@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Ponta.Servico.Login;
+
 public class ServicoLogin(IRepositorioUsuario repositorio)
 : IServicoLogin
 {
@@ -31,7 +32,6 @@ public class ServicoLogin(IRepositorioUsuario repositorio)
 
         return new OkObjectResult(new { Token = token });
     }
-
 
     private static Task<string> GerarToken(Usuario usuario)
     {

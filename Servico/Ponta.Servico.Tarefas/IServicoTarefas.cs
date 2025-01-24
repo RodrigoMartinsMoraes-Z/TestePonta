@@ -7,5 +7,6 @@ namespace Ponta.Servico.Tarefas;
 public interface IServicoTarefas
 {
     Task<IActionResult> BuscarTarefas();
+
     Task<IActionResult> BuscarTarefas(StatusTarefa status);
 }

@@ -3,6 +3,7 @@
 using Ponta.Contexto.Tarefa.Interfaces;
 
 namespace Ponta.Contexto.Tarefa.Contexto;
+
 public class ContextoTarefa : DbContext, IContextoTarefa
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -2,6 +2,7 @@
 using System.Text;
 
 namespace Ponta.Contexto.Usuario.Entidades;
+
 public class Usuario
 {
     private string? senha;

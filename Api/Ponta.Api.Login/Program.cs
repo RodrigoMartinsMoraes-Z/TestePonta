@@ -63,5 +63,3 @@ app.MapPost("/{login}/{senha}", async (IServicoLogin servico, string login, stri
 .WithName("Login");
 
 await app.RunAsync();
-
-

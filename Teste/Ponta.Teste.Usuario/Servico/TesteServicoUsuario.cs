@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Ponta.Teste.Usuario.Servico;
+
 public class TesteServicoUsuario
 {
     private readonly Mock<IRepositorioUsuario> _mockRepositorio;

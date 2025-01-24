@@ -1,6 +1,7 @@
 ﻿using Ponta.Contexto.Tarefa.Enums;
 
 namespace Ponta.Contexto.Tarefa.Entidades;
+
 public class Tarefa
 {
     private DateTime dataCriacao;
@@ -11,9 +12,9 @@ public class Tarefa
 
     public Guid Guid { get; set; }
 
-    public required string Titulo { get; set; }
+    public string Titulo { get; set; }
 
-    public required string Descricao { get; set; }
+    public string Descricao { get; set; }
 
     public DateTime DataCriacao
     {

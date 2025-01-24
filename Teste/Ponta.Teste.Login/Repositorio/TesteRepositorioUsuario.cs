@@ -6,6 +6,7 @@ using Ponta.Contexto.Usuario.Interfaces;
 using Ponta.Contexto.Usuario.Repositorio;
 
 namespace Ponta.Teste.Login.Repositorio;
+
 public class TesteRepositorioUsuario
 {
     private readonly Mock<IContextoUsuario> _mockContexto;
